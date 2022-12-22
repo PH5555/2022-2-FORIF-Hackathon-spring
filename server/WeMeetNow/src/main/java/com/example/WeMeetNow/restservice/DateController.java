@@ -1,8 +1,10 @@
 package com.example.WeMeetNow.restservice;
 
+import com.example.WeMeetNow.Repository.RoomRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -28,10 +30,7 @@ public class DateController {
             @RequestBody
             String roomName
     ) {
-        Room room = new Room(roomName);
-
-        //CREATE Room
-
+        RoomRepository.save(roomName);
         return;
     }
 
@@ -49,14 +48,21 @@ public class DateController {
     public void saveAvailableDateOnRoom(
         String roomName,
         String username,
-        ArrayList<Integer> availableUsers) {
+
+        // 그 유저가 그 방에서 참석 가능한 날들(Integer)의 리스트
+        ArrayList<Integer> availableDate
+    ) {
+
+
+        dateService.deletePreviousDates(roomName, username, availableDate);
+
+        return;
 
         //SELECT를 통해서 기존의 같은 roomName, username의 정보가 있으면 True, 없으면 False
-            if (SELECT()) {
-                //roomName, username를 가진 AVAILABLE_DATE를 모두 삭제
+        if (SELECT()) {
+            //roomName, username를 가진 AVAILABLE_DATE를 모두 삭제
 
-            }
-
+        }
     }
 
     @GetMapping("/loadAvailableDate")
@@ -69,5 +75,12 @@ public class DateController {
         return dateService.loadAvailableDate();
     }
 
+    @GetMapping("/calculateAvailableDate")
+    public Map<Integer, ArrayList<String>> calculateAvailableDate(
+            @RequestParam(value = "roomName")
+            String roomName
+    ) {
+        return dateService.calculateAvailableDate(roomName);
+    }
 
 }
