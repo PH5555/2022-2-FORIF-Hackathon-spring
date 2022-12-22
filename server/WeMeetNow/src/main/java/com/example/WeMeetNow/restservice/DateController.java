@@ -1,9 +1,6 @@
 package com.example.WeMeetNow.restservice;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -26,8 +23,11 @@ public class DateController {
         return dateService.enterRoom(roomName, username);
     }
 
-    @PostMapping("/roomCreate")
-    public void roomCreate(String roomName){
+    @PostMapping("/roomCreation")
+    public void roomCreation(
+            @RequestBody
+            String roomName
+    ) {
         Room room = new Room(roomName);
 
         //CREATE Room
@@ -35,18 +35,28 @@ public class DateController {
         return;
     }
 
+    @PostMapping("userCreation")
+    public void userCreation(
+            @RequestBody
+            String username
+    ) {
+
+        //CREATE User
+        return;
+    }
+
     @PostMapping("saveAvailableDateOnRoom")
     public void saveAvailableDateOnRoom(
         String roomName,
         String username,
-        ArrayList<Integer>) {
-    }
+        ArrayList<Integer> availableUsers) {
 
-    //SELECT를 통해서 기존의 같은 roomName, username의 정보가 있으면 True, 없으면 False
-    if (SELECT()){
-        //roomName, username를 가진 AVAILABLE_DATE를 모두 삭제
+        //SELECT를 통해서 기존의 같은 roomName, username의 정보가 있으면 True, 없으면 False
+            if (SELECT()) {
+                //roomName, username를 가진 AVAILABLE_DATE를 모두 삭제
 
-        return;
+            }
+
     }
 
     @GetMapping("/loadAvailableDate")
@@ -55,8 +65,9 @@ public class DateController {
             String roomName,
             @RequestParam(value = "userName")
             String userName
-    ){
+    ) {
         return dateService.loadAvailableDate();
-
     }
+
+
 }
