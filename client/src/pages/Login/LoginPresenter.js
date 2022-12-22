@@ -3,13 +3,28 @@ import Input from "../../components/Input";
 import styled from "styled-components";
 import Button from "../../components/Button";
 
-const LoginPresenter = ({ enterRoom, createRoom }) => {
+const LoginPresenter = ({
+  enterRoom,
+  createRoom,
+  onRoomIdChange,
+  onNameChange,
+  roomId,
+  name,
+}) => {
   return (
     <Container>
       <Image src="/asset/image/person.jpeg" />
       <Text>우리 지금 만나</Text>
-      <Input hint={"방 id를 입력해주세요!"} />
-      <Input hint={"이름을 입력해주세요!"} />
+      <Input
+        hint={"방 id를 입력해주세요!"}
+        onChange={onRoomIdChange}
+        text={roomId}
+      />
+      <Input
+        hint={"이름을 입력해주세요!"}
+        onChange={onNameChange}
+        text={name}
+      />
       <Button onClick={enterRoom}>입장하기</Button>
       <Button onClick={createRoom}>방 만들기</Button>
     </Container>
@@ -29,6 +44,7 @@ const Text = styled.p`
   color: white;
   margin: 0;
   margin-bottom: 36px;
+  margin-left: 22px;
 `;
 
 const Image = styled.img`
@@ -37,6 +53,7 @@ const Image = styled.img`
   border-radius: 30px;
   margin-bottom: 18px;
   margin-top: 30px;
+  margin-left: 22px;
 `;
 
 export default LoginPresenter;

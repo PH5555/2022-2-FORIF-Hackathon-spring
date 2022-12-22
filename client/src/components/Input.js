@@ -1,21 +1,11 @@
 import React, { useState } from "react";
 import styled, { css } from "styled-components";
 
-const Input = ({ hint }) => {
-  const [text, setText] = useState("");
-
-  const onChange = (e) => {
-    setText(e.target.value);
-  };
-
-  const onReset = () => {
-    setText("");
-  };
-
+const Input = ({ hint, onChange, text }) => {
   return (
     <Container>
       <InputOutLine>{text === "" ? hint : text}</InputOutLine>
-      <InputBox onChange={onChange} value={text}></InputBox>
+      <InputBox onChange={onChange}></InputBox>
     </Container>
   );
 };
