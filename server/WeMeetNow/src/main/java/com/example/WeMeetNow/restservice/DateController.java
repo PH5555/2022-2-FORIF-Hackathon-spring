@@ -4,8 +4,7 @@ import com.example.WeMeetNow.Repository.RoomRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.HashMap;
 
 @RestController
 public class DateController {
@@ -15,6 +14,7 @@ public class DateController {
         this.dateService = dateService;
     }
 
+    // 특정 Room에 들어간다.
     @GetMapping("/room")
     public Boolean enterRoom(
             @RequestParam(value = "roomName")
@@ -41,6 +41,8 @@ public class DateController {
     ) {
 
         //CREATE User
+        DateService.createUser(username);
+
         return;
     }
 
@@ -53,20 +55,17 @@ public class DateController {
         ArrayList<Integer> availableDate
     ) {
 
-
+        // 특정 User가 특정 Room에서 이미 기록한 Date들이 있으면, 그 먼저 있던 Date들을 삭제한다.
         dateService.deletePreviousDates(roomName, username, availableDate);
 
+        // 주어진 roomName과 username을 통해 Available한 Date를 저장한다.
+
         return;
-
-        //SELECT를 통해서 기존의 같은 roomName, username의 정보가 있으면 True, 없으면 False
-        if (SELECT()) {
-            //roomName, username를 가진 AVAILABLE_DATE를 모두 삭제
-
         }
     }
 
     @GetMapping("/loadAvailableDate")
-    public Map<String, String> createRoom(
+    public HashMap<String, String> createRoom(
             @RequestParam(value = "roomName")
             String roomName,
             @RequestParam(value = "userName")
@@ -76,7 +75,7 @@ public class DateController {
     }
 
     @GetMapping("/calculateAvailableDate")
-    public Map<Integer, ArrayList<String>> calculateAvailableDate(
+    public HashMap<Integer, ArrayList<String>> calculateAvailableDate(
             @RequestParam(value = "roomName")
             String roomName
     ) {

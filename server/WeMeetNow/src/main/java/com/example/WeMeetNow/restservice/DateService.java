@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class DateService {
@@ -35,46 +35,86 @@ public class DateService {
             String roomName,
             String username
     ) {
-        Boolean result = findOneRoom(roomName);
 
-        if (result) {
-            insertOneRoom(roomName, username);
+        // 만약 찾았다면 rId를, 못찾았다면 false를 return한다.
+        try {
+            System.out.format("enterRoom -> findOneRIdByName이 성공했습니다.");
+            return findOneRIdByName(roomName);
+
+        } catch (Exception e){
+            System.out.println("enterRoom -> findOneRIdByName이 실패했습니다.");
+            return false;
         }
 
-        return result;
     }
 
-    public Map<Integer, String> loadAvailableDate(
-        String roomName,
+    // username을 받아서 User를 생성한다.
+    public void createUser(
         String username
     ) {
-        Map<Integer, String> date_username = new Map<Integer, String>;
+        UserRepository.save(username);
+        return;
+    }
 
-        Integer date = null;
-        ArrayList<String> presentUsers = null;
+    // 각 User의 Available Date들을 캘린더에 띄워준다.
+    public HashMap<Integer, List<String>> loadAvailableDate(
+        String roomName
+    ) {
 
-        for (user in presentUsers) {
+        // roomName 에 해당하는 모든 (날짜, 유저이름) 쌍을 리턴. 없으면 null
+        // [날짜 : "kim"]
+        HashMap<Integer, String> pairs = AvailableDateRepository.findManyPairByRoomName(roomName);
+
+        // 날짜 : ["kim", "lee"] 형태로 만든다. -> sortedPairs에 저장한다. 
+        HashMap<Integer, List<String>> sortedPairs;
+
+        // 아래 for loop를 위해 date, username를 생성
+        Integer date;
+        String username;
+
+        for (HashMap<Integer, String> pair : pairs) {
+            // 각 pair의 key와 value를 가져오기
+            pair.forEach((key, value) -> {
+                Integer date = key;
+                String username = value;
+            });
+
+            // if 이미 그 날짜가 sortedPairs에 key로 존재하면, value에 username을 추가
+            if (sortedPairs.containsKey(date)) {
+                sortedPairs.put(date, sortedPairs.get(date).add(value));
+
+            } else {
+                // else 만약 그 날짜가 sortedPairs에 key로 존재하지 않는, 즉 새로운 날짜면, date:username으로 저장.
+                sortedPairs.put(date, username);
+            }
 
         }
-        //SELECT Room:
 
+        HashMap<Integer, List<String>> date_username = new HashMap<Integer, List<String>>;
+
+        // 날짜 : ["kim", "lee"]
         return date_username;
     }
 
-    public Map<Integer, ArrayList<String>> calculateAvailableDate(
+
+    // 특정한 Room에서 각자의 가능한 Date들 중 가장 빠른 것을 찾는다.
+    public HashMap<Integer, ArrayList<String>> calculateAvailableDate(
+            //
             String roomName
     ) {
+        HashMap<Integer, ArrayList<String>> AvailableDate = null;
 
-        Map<Integer, ArrayList<String>> AvailableDate = null;
+        AvailableDateRepository.save(int rId, int uId, int date);
 
         return AvailableDate;
     }
 
+
+    // 특정 User가 특정 Room에서 이미 기록한 Date들이 있으면, 그 먼저 있던 Date들을 삭제한다.
     public void deletePreviousDates(
             String roomName,
             String username,
             ArrayList<Integer> availableDate) {
-
 
         // roomName과 userName을 통해 rId 와 uId를 구한다.
         Integer rId = findOneRIdByName(roomName);
